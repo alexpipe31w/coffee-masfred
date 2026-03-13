@@ -6,6 +6,7 @@ export interface Variant {
   price: { amount: string; currencyCode: 'COP' };
   availableForSale: boolean;
   sku: string;
+  image: { url: string; width: number; height: number } | null; // ← nuevo
 }
 
 export interface Product {

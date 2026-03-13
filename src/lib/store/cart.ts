@@ -5,7 +5,6 @@ import { persist } from 'zustand/middleware';
 import type { Cart } from '@/lib/stockup/types';
 
 // ─── SessionId ────────────────────────────────────────────
-// Se genera una sola vez y persiste para toda la vida del carrito
 const getOrCreateSessionId = (): string => {
   let id = localStorage.getItem('masfred-cart-session');
   if (!id) {
@@ -40,7 +39,6 @@ export const useCart = create<CartStore>()(
       cart: null,
       isOpen: false,
       isLoading: false,
-      // typeof window guard para SSR
       sessionId:
         typeof window !== 'undefined' ? getOrCreateSessionId() : '',
 
@@ -55,7 +53,7 @@ export const useCart = create<CartStore>()(
               productId,
               variantId,
               quantity,
-              price, // referencial — el servidor siempre verifica
+              price,
             }),
           });
 
@@ -65,7 +63,7 @@ export const useCart = create<CartStore>()(
           set({ cart: data, isOpen: true });
         } catch (e) {
           console.error('[Cart] addItem:', e);
-          throw e; // re-throw para que el componente muestre el error
+          throw e;
         } finally {
           set({ isLoading: false });
         }
@@ -77,7 +75,11 @@ export const useCart = create<CartStore>()(
           const res = await fetch('/api/stockup/cart', {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cartItemId, quantity }),
+            body: JSON.stringify({
+              cartId: get().cart?.id,  // ← cartId del carrito actual
+              itemId: cartItemId,       // ← itemId en vez de cartItemId
+              quantity,
+            }),
           });
 
           if (!res.ok) throw new Error(`Cart update error: ${res.status}`);
@@ -89,7 +91,6 @@ export const useCart = create<CartStore>()(
         }
       },
 
-      // quantity: 0 elimina el item (no hay endpoint DELETE en Stockup)
       removeItem: (cartItemId) => get().updateItem(cartItemId, 0),
 
       openCart:  () => set({ isOpen: true }),
@@ -97,7 +98,6 @@ export const useCart = create<CartStore>()(
     }),
     {
       name: 'masfred-cart',
-      // Solo persistir cart y sessionId — no estados de UI
       partialize: (state) => ({
         cart: state.cart,
         sessionId: state.sessionId,

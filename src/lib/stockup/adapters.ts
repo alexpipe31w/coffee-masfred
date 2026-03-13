@@ -11,6 +11,10 @@ function adaptVariant(raw: any): Variant {
     },
     availableForSale: raw.isActive === true && raw.stock > 0,
     sku: raw.sku ?? '',
+    // Stockup devuelve la imagen de la variante en raw.image
+    image: raw.image
+      ? { url: raw.image, width: 800, height: 800 }
+      : null,
   };
 }
 
@@ -20,7 +24,6 @@ export function adaptProduct(raw: any): Product {
     (v: any) => v.isActive === true,
   );
 
-  // Precio mínimo entre variantes activas (o precio base)
   const prices = activeVariants.map((v: any) =>
     parseFloat(v.price ?? raw.price),
   );

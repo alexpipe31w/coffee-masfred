@@ -12,7 +12,6 @@ const formatCOP = (n: string | number) =>
     minimumFractionDigits: 0,
   }).format(Number(n));
 
-// ─── SVG íconos ───────────────────────────────────────────
 const IconCart = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
@@ -35,34 +34,24 @@ const IconLoading = () => (
 
 type AddState = 'idle' | 'loading' | 'success';
 
-// ─── ProductCard ──────────────────────────────────────────
 function ProductCard({ producto }: { producto: Product }) {
   const firstVariant = producto.variants[0];
-  const [varianteId, setVarianteId] = useState<string | null>(
-    firstVariant?.id ?? null,
-  );
+  const [varianteId, setVarianteId] = useState<string | null>(firstVariant?.id ?? null);
   const [addState, setAddState] = useState<AddState>('idle');
   const { addItem } = useCart();
 
   const varianteActual = producto.variants.find(v => v.id === varianteId);
-  const precioActual   = varianteActual
-    ? varianteActual.price.amount
-    : producto.price.amount;
+  const precioActual   = varianteActual ? varianteActual.price.amount : producto.price.amount;
+  const disponible     = varianteActual ? varianteActual.availableForSale : producto.availableForSale;
 
-  const disponible = varianteActual
-    ? varianteActual.availableForSale
-    : producto.availableForSale;
+  // Imagen activa: variante primero, luego producto
+  const imagenActiva = varianteActual?.image ?? producto.featuredImage;
 
   const handleAddToCart = async () => {
     if (addState !== 'idle' || !disponible) return;
     setAddState('loading');
     try {
-      await addItem(
-        producto.id,
-        producto.hasVariants ? varianteId : null,
-        1,
-        parseFloat(precioActual),
-      );
+      await addItem(producto.id, producto.hasVariants ? varianteId : null, 1, parseFloat(precioActual));
       setAddState('success');
       setTimeout(() => setAddState('idle'), 2000);
     } catch {
@@ -95,29 +84,39 @@ function ProductCard({ producto }: { producto: Product }) {
         (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(100,48,24,0.08)';
       }}
     >
-      {/* ─── Imagen ───────────────────────────────── */}
+      {/* Imagen — aspect ratio 4:3, contain para no recortar */}
       <div style={{
-        position: 'relative', height: '220px',
+        position: 'relative',
+        paddingBottom: '75%',
         background: 'linear-gradient(135deg, #643018 0%, #3D1A0A 100%)',
         overflow: 'hidden',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        {producto.featuredImage ? (
+        {imagenActiva ? (
           <Image
-            src={producto.featuredImage.url}
+            key={imagenActiva.url}
+            src={imagenActiva.url}
             alt={producto.title}
             fill
-            style={{ objectFit: 'cover', transition: 'transform 0.4s ease' }}
+            style={{
+              objectFit: 'contain',
+              objectPosition: 'center',
+              padding: '12px',
+              transition: 'opacity 0.25s ease',
+            }}
             sizes="(max-width: 768px) 100vw, 50vw"
           />
         ) : (
-          <div style={{ textAlign: 'center' }}>
+          <div style={{
+            position: 'absolute', inset: 0,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+          }}>
             <div style={{
               width: '72px', height: '72px', borderRadius: '50%',
               background: 'rgba(255,246,211,0.08)',
               border: '2px solid rgba(200,150,62,0.3)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              margin: '0 auto 10px',
+              marginBottom: '10px',
             }}>
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(200,150,62,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
@@ -127,16 +126,12 @@ function ProductCard({ producto }: { producto: Product }) {
                 <line x1="14" y1="1" x2="14" y2="4"/>
               </svg>
             </div>
-            <span style={{
-              fontFamily: 'var(--font-playfair)', fontSize: '12px',
-              color: 'rgba(255,246,211,0.35)', fontStyle: 'italic',
-            }}>
+            <span style={{ fontFamily: 'var(--font-playfair)', fontSize: '12px', color: 'rgba(255,246,211,0.35)', fontStyle: 'italic' }}>
               Imagen próximamente
             </span>
           </div>
         )}
 
-        {/* Badge disponibilidad */}
         <div style={{
           position: 'absolute', top: '14px', right: '14px',
           padding: '4px 10px', borderRadius: '99px',
@@ -150,35 +145,20 @@ function ProductCard({ producto }: { producto: Product }) {
         </div>
       </div>
 
-      {/* ─── Body ─────────────────────────────────── */}
       <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-
-        <h3 style={{
-          fontFamily: 'var(--font-playfair)', fontWeight: 700,
-          fontSize: '20px', color: '#643018', lineHeight: 1.25,
-          marginBottom: '8px',
-        }}>
+        <h3 style={{ fontFamily: 'var(--font-playfair)', fontWeight: 700, fontSize: '20px', color: '#643018', lineHeight: 1.25, marginBottom: '8px' }}>
           {producto.title}
         </h3>
 
         {producto.description && (
-          <p style={{
-            fontFamily: 'var(--font-lora)', fontStyle: 'italic',
-            fontSize: '13px', color: 'rgba(61,26,10,0.68)',
-            lineHeight: 1.7, marginBottom: '16px',
-          }}>
+          <p style={{ fontFamily: 'var(--font-lora)', fontStyle: 'italic', fontSize: '13px', color: 'rgba(61,26,10,0.68)', lineHeight: 1.7, marginBottom: '16px' }}>
             {producto.description}
           </p>
         )}
 
-        {/* Selector variante */}
         {producto.hasVariants && producto.variants.length > 0 && (
           <div style={{ marginBottom: '20px' }}>
-            <p style={{
-              fontSize: '10px', fontFamily: 'var(--font-inter)',
-              color: 'rgba(61,26,10,0.4)', textTransform: 'uppercase',
-              letterSpacing: '0.1em', marginBottom: '8px',
-            }}>
+            <p style={{ fontSize: '10px', fontFamily: 'var(--font-inter)', color: 'rgba(61,26,10,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
               Presentación
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -191,8 +171,8 @@ function ProductCard({ producto }: { producto: Product }) {
                     disabled={!v.availableForSale}
                     style={{
                       padding: '7px 16px', borderRadius: '99px',
-                      fontSize: '12px', fontFamily: 'var(--font-inter)',
-                      fontWeight: 500, cursor: v.availableForSale ? 'pointer' : 'not-allowed',
+                      fontSize: '12px', fontFamily: 'var(--font-inter)', fontWeight: 500,
+                      cursor: v.availableForSale ? 'pointer' : 'not-allowed',
                       transition: 'all 0.2s ease',
                       background: selected ? '#643018' : 'transparent',
                       color: selected ? '#FFF6D3' : v.availableForSale ? '#643018' : 'rgba(100,48,24,0.3)',
@@ -208,26 +188,12 @@ function ProductCard({ producto }: { producto: Product }) {
           </div>
         )}
 
-        {/* Precio + Botón */}
-        <div style={{
-          display: 'flex', alignItems: 'center',
-          justifyContent: 'space-between',
-          marginTop: 'auto', gap: '12px',
-          // En vez de flexWrap que rompe el layout, dejamos que el botón
-          // se encoja si hace falta — flex-shrink está permitido por defecto
-        }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', gap: '12px' }}>
           <div style={{ flexShrink: 0 }}>
-            <p style={{
-              fontSize: '10px', fontFamily: 'var(--font-inter)',
-              color: 'rgba(61,26,10,0.4)', textTransform: 'uppercase',
-              letterSpacing: '0.1em', marginBottom: '2px',
-            }}>
+            <p style={{ fontSize: '10px', fontFamily: 'var(--font-inter)', color: 'rgba(61,26,10,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2px' }}>
               Precio
             </p>
-            <p style={{
-              fontFamily: 'var(--font-playfair)', fontWeight: 700,
-              fontSize: 'clamp(18px, 4vw, 22px)', color: '#643018', lineHeight: 1,
-            }}>
+            <p style={{ fontFamily: 'var(--font-playfair)', fontWeight: 700, fontSize: 'clamp(18px, 4vw, 22px)', color: '#643018', lineHeight: 1 }}>
               {formatCOP(precioActual)}
             </p>
           </div>
@@ -239,26 +205,17 @@ function ProductCard({ producto }: { producto: Product }) {
               display: 'flex', alignItems: 'center', gap: '8px',
               padding: '11px 18px', borderRadius: '99px',
               background: !disponible ? 'rgba(100,48,24,0.2)' : btnConfig.bg,
-              color: '#FFF6D3',
-              fontFamily: 'var(--font-inter)', fontWeight: 600,
+              color: '#FFF6D3', fontFamily: 'var(--font-inter)', fontWeight: 600,
               fontSize: '13px', border: 'none',
               cursor: addState !== 'idle' || !disponible ? 'not-allowed' : 'pointer',
               transition: 'background 0.2s ease, transform 0.2s ease',
               boxShadow: disponible ? '0 4px 16px rgba(100,48,24,0.25)' : 'none',
-              whiteSpace: 'nowrap',
-              flexShrink: 0,
+              whiteSpace: 'nowrap', flexShrink: 0,
             }}
-            onMouseEnter={e => {
-              if (addState === 'idle' && disponible)
-                (e.currentTarget as HTMLElement).style.transform = 'scale(1.03)';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.transform = 'scale(1)';
-            }}
+            onMouseEnter={e => { if (addState === 'idle' && disponible) (e.currentTarget as HTMLElement).style.transform = 'scale(1.03)'; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = 'scale(1)'; }}
           >
-            {!disponible ? 'Agotado' : (
-              <>{btnConfig.icon}{btnConfig.label}</>
-            )}
+            {!disponible ? 'Agotado' : <>{btnConfig.icon}{btnConfig.label}</>}
           </button>
         </div>
       </div>
@@ -266,59 +223,25 @@ function ProductCard({ producto }: { producto: Product }) {
   );
 }
 
-// ─── Sección principal ────────────────────────────────────
 export function ProductosSection({ productos }: { productos: Product[] }) {
   return (
     <section
       id="productos"
-      style={{
-        background: 'linear-gradient(180deg, #FFF6D3 0%, #fff8e8 100%)',
-        padding: 'clamp(48px, 8vw, 80px) 0',
-        position: 'relative', overflow: 'hidden',
-      }}
+      style={{ background: 'linear-gradient(180deg, #FFF6D3 0%, #fff8e8 100%)', padding: 'clamp(48px, 8vw, 80px) 0', position: 'relative', overflow: 'hidden' }}
       aria-labelledby="productos-titulo"
     >
-      {/* Fondo sutil */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute', inset: 0, opacity: 0.025, pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, #643018 1.5px, transparent 1.5px)',
-          backgroundSize: '40px 40px',
-        }}
-      />
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, opacity: 0.025, pointerEvents: 'none', backgroundImage: 'radial-gradient(circle, #643018 1.5px, transparent 1.5px)', backgroundSize: '40px 40px' }} />
 
-      <div style={{
-        maxWidth: '1100px', margin: '0 auto',
-        // clamp: mínimo 16px en móvil, ideal 5vw, máximo 24px en desktop
-        padding: '0 clamp(16px, 5vw, 24px)',
-        position: 'relative', zIndex: 1,
-      }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(16px, 5vw, 24px)', position: 'relative', zIndex: 1 }}>
 
-        {/* ─── Título ─────────────────────────────── */}
         <div style={{ textAlign: 'center', marginBottom: 'clamp(36px, 6vw, 56px)' }}>
-          <span style={{
-            display: 'block', fontSize: '11px', fontFamily: 'var(--font-inter)',
-            fontWeight: 600, letterSpacing: '0.4em', color: '#AAC071',
-            textTransform: 'uppercase', marginBottom: '12px',
-          }}>
+          <span style={{ display: 'block', fontSize: '11px', fontFamily: 'var(--font-inter)', fontWeight: 600, letterSpacing: '0.4em', color: '#AAC071', textTransform: 'uppercase', marginBottom: '12px' }}>
             Nuestros Cafés
           </span>
-          <h2
-            id="productos-titulo"
-            style={{
-              fontFamily: 'var(--font-playfair)', fontWeight: 700,
-              fontSize: 'clamp(1.75rem, 4vw, 3rem)', color: '#643018',
-              marginBottom: '16px', lineHeight: 1.2,
-            }}
-          >
+          <h2 id="productos-titulo" style={{ fontFamily: 'var(--font-playfair)', fontWeight: 700, fontSize: 'clamp(1.75rem, 4vw, 3rem)', color: '#643018', marginBottom: '16px', lineHeight: 1.2 }}>
             Dos Orígenes, Un Solo Amor
           </h2>
-          <p style={{
-            fontFamily: 'var(--font-lora)', fontStyle: 'italic',
-            color: 'rgba(61,26,10,0.65)', fontSize: 'clamp(14px, 2vw, 17px)',
-            maxWidth: '440px', margin: '0 auto', lineHeight: 1.7,
-          }}>
+          <p style={{ fontFamily: 'var(--font-lora)', fontStyle: 'italic', color: 'rgba(61,26,10,0.65)', fontSize: 'clamp(14px, 2vw, 17px)', maxWidth: '440px', margin: '0 auto', lineHeight: 1.7 }}>
             Cuatro formas de disfrutar lo mejor del Huila
           </p>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginTop: '24px' }}>
@@ -328,52 +251,23 @@ export function ProductosSection({ productos }: { productos: Product[] }) {
           </div>
         </div>
 
-        {/* ─── Grid productos ─────────────────────── */}
         {productos.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0' }}>
-            <p style={{
-              fontFamily: 'var(--font-lora)', fontStyle: 'italic',
-              color: 'rgba(61,26,10,0.4)', fontSize: '16px',
-            }}>
-              Cargando productos...
-            </p>
+            <p style={{ fontFamily: 'var(--font-lora)', fontStyle: 'italic', color: 'rgba(61,26,10,0.4)', fontSize: '16px' }}>Cargando productos...</p>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            // min(100%, 320px) evita que la columna mínima supere el ancho disponible
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
-            gap: 'clamp(20px, 4vw, 32px)',
-            maxWidth: '800px',
-            margin: '0 auto',
-          }}>
-            {productos.map((p) => (
-              <ProductCard key={p.id} producto={p} />
-            ))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))', gap: 'clamp(20px, 4vw, 32px)', maxWidth: '800px', margin: '0 auto' }}>
+            {productos.map((p) => <ProductCard key={p.id} producto={p} />)}
           </div>
         )}
 
-        {/* ─── Info envíos ────────────────────────── */}
-        <div style={{
-          display: 'flex', flexWrap: 'wrap', justifyContent: 'center',
-          gap: '12px', marginTop: 'clamp(32px, 5vw, 48px)',
-        }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px', marginTop: 'clamp(32px, 5vw, 48px)' }}>
           {[
-            { icon: '🚚', texto: 'Envíos a toda Colombia'        },
-            { icon: '☕', texto: 'Fresco del tostador'           },
-            { icon: '📦', texto: '500g con válvula resellable'   },
+            { icon: '🚚', texto: 'Envíos a toda Colombia' },
+            { icon: '☕', texto: 'Fresco del tostador' },
+            { icon: '📦', texto: '500g con válvula resellable' },
           ].map((item) => (
-            <div
-              key={item.texto}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                padding: '10px 18px', borderRadius: '99px',
-                background: 'rgba(100,48,24,0.05)',
-                border: '1px solid rgba(100,48,24,0.1)',
-                fontSize: '13px', fontFamily: 'var(--font-inter)', color: '#3D1A0A',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <div key={item.texto} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', borderRadius: '99px', background: 'rgba(100,48,24,0.05)', border: '1px solid rgba(100,48,24,0.1)', fontSize: '13px', fontFamily: 'var(--font-inter)', color: '#3D1A0A', whiteSpace: 'nowrap' }}>
               <span>{item.icon}</span>
               <span>{item.texto}</span>
             </div>

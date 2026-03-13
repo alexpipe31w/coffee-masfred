@@ -18,7 +18,6 @@ export async function stockupFetch<T>(
       'X-API-Key': API_KEY,
       ...options.headers,
     },
-    // Solo cachear GETs — mutaciones nunca
     next: options.method && options.method !== 'GET'
       ? undefined
       : { revalidate },
@@ -26,7 +25,12 @@ export async function stockupFetch<T>(
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || `Stockup error ${res.status}`);
+    console.error(`[Stockup] ${options.method ?? 'GET'} ${endpoint} → ${res.status}`, JSON.stringify(err));
+    const message =
+      typeof err === 'string'
+        ? err
+        : err.error ?? err.message ?? err.msg ?? err.detail ?? JSON.stringify(err);
+    throw new Error(`Stockup ${res.status}: ${message}`);
   }
 
   return res.json();
