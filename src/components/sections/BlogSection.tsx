@@ -15,7 +15,7 @@ const POSTS = [
     descripcion: 'La forma más suave de disfrutar el Guadalupe. Sin calor, sin amargura, solo la dulzura natural del proceso natural.',
     tiempo: '10 min + 24h reposo',
     dificultad: 'Fácil',
-    imagen: '/images/coldbrew.png',
+    imagen: '/images/coldbrew.PNG',
     pasos: [
       'Muele 80g de café Guadalupe en molido grueso.',
       'Mezcla con 1 litro de agua fría en un frasco de vidrio.',
@@ -35,7 +35,7 @@ const POSTS = [
     descripcion: 'Con una moka italiana y el Isnos fermentado, puedes tener un espresso potente y aromático en minutos.',
     tiempo: '8 min',
     dificultad: 'Media',
-    imagen: '/images/moka.png',
+    imagen: '/images/moka.PNG',
     pasos: [
       'Llena la cámara inferior con agua hasta la válvula.',
       'Pon 20g de Isnos molido fino en el filtro sin apretar.',
@@ -55,7 +55,7 @@ const POSTS = [
     descripcion: 'Cuando la cereza se seca completa al sol, los azúcares del fruto se concentran en el grano. Así nace la dulzura del Guadalupe.',
     tiempo: null,
     dificultad: null,
-    imagen: '/images/proceso.png',
+    imagen: '/images/proceso.PNG',
     pasos: [
       'La cereza madura se cosecha y se extiende en camas africanas.',
       'El sol del Huila (1.700 msnm) seca la fruta durante 20–30 días.',
@@ -75,7 +75,7 @@ const POSTS = [
     descripcion: 'Dos municipios del sur del Huila, separados por 30km, con perfiles de taza completamente distintos. Te ayudamos a elegir.',
     tiempo: null,
     dificultad: null,
-    imagen: '/images/guadalupe-isnos.png',
+    imagen: '/images/guadalupe-isnos.PNG',
     pasos: [
       'Guadalupe (1.700m): clima cálido, variedad Catimore, proceso Natural.',
       'Isnos (1.800m): microclima fresco, variedad Caturra, fermentación controlada.',
@@ -95,7 +95,7 @@ const POSTS = [
     descripcion: 'Con panela, canela y el Guadalupe molido grueso. La forma en que se tomaba el café en las fincas del Huila.',
     tiempo: '15 min',
     dificultad: 'Fácil',
-    imagen: '/images/olla.png',
+    imagen: '/images/olla.PNG',
     pasos: [
       'Hierve 1 litro de agua con 1 rama de canela y 2 cucharadas de panela.',
       'Agrega 4 cucharadas de café Guadalupe molido grueso.',
@@ -115,7 +115,7 @@ const POSTS = [
     descripcion: 'La fermentación no es un accidente. Es ciencia aplicada al café para despertar notas que el grano no podría dar de otra forma.',
     tiempo: null,
     dificultad: null,
-    imagen: '/images/fermentacion.png',
+    imagen: '/images/fermentacion.PNG',
     pasos: [
       'La cereza se despulpa y el mucílago queda sobre el grano.',
       'Se deja fermentar en tanques entre 24 y 48 horas controladas.',
