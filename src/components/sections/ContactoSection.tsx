@@ -23,8 +23,8 @@ const INFO = [
       </svg>
     ),
     label: 'Instagram',
-    valor: '@coffemasfred',
-    link: 'https://instagram.com/coffemasfred',
+    valor: '@coffeemasfred',
+    link: 'https://instagram.com/coffeemasfred',
   },
   {
     icon: (
