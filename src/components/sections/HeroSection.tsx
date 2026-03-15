@@ -92,11 +92,11 @@ export function HeroSection() {
         {/* Eyebrow */}
         <span style={{
           display: 'block',
-          fontSize: '11px',
+          fontSize: '15px',
           fontFamily: 'var(--font-inter)',
           fontWeight: 600,
           letterSpacing: '0.5em',
-          color: '#AAC071',
+          color: '#643018',
           textTransform: 'uppercase',
           marginBottom: '12px',
         }}>

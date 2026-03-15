@@ -163,7 +163,7 @@ export function NotasSection() {
             color: 'rgba(255,246,211,0.55)', fontSize: '17px',
             maxWidth: '400px', margin: '0 auto', lineHeight: 1.7,
           }}>
-            El terroir del Huila en cada sorbo
+            El territorio del Huila en cada sorbo
           </p>
           <div style={{
             display: 'flex', alignItems: 'center',

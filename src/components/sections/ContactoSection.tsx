@@ -34,8 +34,8 @@ const INFO = [
       </svg>
     ),
     label: 'Email',
-    valor: 'coffemasfred@gmail.com',
-    link: 'mailto:coffemasfred@gmail.com',
+    valor: 'coffee.masfred@gmail.com',
+    link: 'mailto:coffee.masfred@gmail.com',
   },
   {
     icon: (
