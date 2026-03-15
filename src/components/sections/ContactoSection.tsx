@@ -12,7 +12,7 @@ const INFO = [
       </svg>
     ),
     label: 'Ubicación',
-    valor: 'Guadalupe & Isnos, Huila — Colombia',
+    valor: 'kilometro 12 vía al juncal, Condominio llanos de vimianzo, Palermo - Huila',
   },
   {
     icon: (
