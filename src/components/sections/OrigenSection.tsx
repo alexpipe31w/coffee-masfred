@@ -30,8 +30,8 @@ const FINCAS = [
     proceso: 'Lavado / Fermentado',
     descripcion: 'En las alturas de Isnos, la fermentación controlada transforma los azúcares del grano en notas florales, frutales y una dulzura compleja que sorprende en cada taza.',
     notas: [
-      { label: 'Durazno',      color: '#C8963E' },
-      { label: 'Floral',       color: '#AAC071' },
+      { label: 'Miel',      color: '#C8963E' },
+      { label: 'Caña de Azúcar',       color: '#AAC071' },
       { label: 'Cítrico suave', color: '#8B4513' },
     ],
     badge: 'Fermentado',

@@ -23,8 +23,8 @@ const CAFES = [
     descripcion: 'Una taza brillante, de acidez elegante y final dulce. La complejidad de la fermentación controlada.',
     color: '#AAC071',
     notas: [
-      { emoji: '🍑', label: 'Durazno',       intensidad: 85 },
-      { emoji: '🌸', label: 'Floral',        intensidad: 80 },
+      { emoji: '🍯', label: 'Miel',       intensidad: 85 },
+      { emoji: '🌾', label: 'Caña de Azúcar',        intensidad: 80 },
       { emoji: '🍊', label: 'Cítrico suave', intensidad: 65 },
       { emoji: '🍬', label: 'Azúcar morena', intensidad: 75 },
     ],
