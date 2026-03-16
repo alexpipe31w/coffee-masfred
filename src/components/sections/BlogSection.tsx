@@ -80,7 +80,7 @@ const POSTS = [
       'Guadalupe (1.700m): clima cálido, variedad Catimore, proceso Natural.',
       'Isnos (1.800m): microclima fresco, variedad Caturra, fermentación controlada.',
       'Guadalupe → cuerpo pleno, chocolate, caramelo. Para tomar con leche.',
-      'Isnos → acidez brillante, floral, cítrico. Para tomar negro.',
+      'Isnos → Miel, Caña de Azúcar, cítrico. Para tomar negro.',
       'Nuestro consejo: empieza con los dos y descubre tu favorito.',
     ],
     fecha: 'Diciembre 2024',
