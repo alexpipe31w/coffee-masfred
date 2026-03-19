@@ -1,6 +1,6 @@
 'use client';
 
-const WHATSAPP_NUMBER = '573232848455'; // ← pon tu número aquí
+const WHATSAPP_NUMBER = '573103275824'; // 
 const WHATSAPP_MESSAGE = encodeURIComponent('Hola! Quiero pedir un café Masfred ☕');
 
 const INFO = [
@@ -245,7 +245,7 @@ export function ContactoSection() {
                 fontFamily: 'var(--font-inter)', fontSize: '12px',
                 color: 'rgba(255,246,211,0.3)',
               }}>
-                Lun – Sáb · 8am – 8pm
+                24/7
               </p>
             </div>
 
